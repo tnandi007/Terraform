@@ -4,30 +4,30 @@ Lets assume we have to create a policy document like this
     data "aws_iam_policy_document" "event_stream_bucket_role_assume_role_policy" {
    
     statement {
-        actions = ["sts:AssumeRole"]
+            actions = ["sts:AssumeRole"]
+            
+            principals {
+              type        = "Service"
+              identifiers = ["firehose.amazonaws.com"]
+            }  
+    
+             principals {
+              type        = "Service"
+              identifiers = ["firehose.amazonaws.com"]
+            }  
+    
+            actions = [
+              "kms:Decrypt",
+              "kms:GenerateDataKey"
+                ]
         
-        principals {
-          type        = "Service"
-          identifiers = ["firehose.amazonaws.com"]
-        }  
-
-         principals {
-          type        = "Service"
-          identifiers = ["firehose.amazonaws.com"]
-        }  
-
-        actions = [
-          "kms:Decrypt",
-          "kms:GenerateDataKey"
-            ]
-    
-        resources = ["*"]
-    
-        condition {
-          test     = "ForAnyValue:StringEquals"
-          variable = "kms:EncryptionContext:service"
-          values   = ["pi"]
-        }
+            resources = ["*"]
+        
+            condition {
+              test     = "ForAnyValue:StringEquals"
+              variable = "kms:EncryptionContext:service"
+              values   = ["pi"]
+            }
       }      
     }
 This can be implemented using Dynamic like this
