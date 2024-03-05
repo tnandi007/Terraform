@@ -28,33 +28,7 @@ Lets assume we have to create a policy document like this
           variable = "kms:EncryptionContext:service"
           values   = ["pi"]
         }
-      }
-      statement {
-        actions = ["sts:AssumeRole"]
-        
-        principals {
-          type        = "Service"
-          identifiers = ["firehose.amazonaws.com"]
-        }  
-
-         principals {
-          type        = "Service"
-          identifiers = ["firehose.amazonaws.com"]
-        }  
-
-        actions = [
-          "kms:Decrypt",
-          "kms:GenerateDataKey"
-            ]
-    
-        resources = ["*"]
-    
-        condition {
-          test     = "ForAnyValue:StringEquals"
-          variable = "kms:EncryptionContext:service"
-          values   = ["pi"]
-        }
-      }
+      }      
     }
 This can be implemented using Dynamic like this
 
