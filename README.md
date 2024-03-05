@@ -1,11 +1,11 @@
 # Using Dynamic Variable in Terraform
 Lets assume we have to create a policy document like this 
-
-data "aws_iam_policy_document" "event_stream_bucket_role_assume_role_policy" 
- {
+    
+    data "aws_iam_policy_document" "event_stream_bucket_role_assume_role_policy" {
+   
     statement {
         actions = ["sts:AssumeRole"]
-    
+        
         principals {
           type        = "Service"
           identifiers = ["firehose.amazonaws.com"]
