@@ -11,6 +11,11 @@ Lets assume we have to create a policy document like this
           identifiers = ["firehose.amazonaws.com"]
         }  
 
+         principals {
+          type        = "Service"
+          identifiers = ["firehose.amazonaws.com"]
+        }  
+
         actions = [
           "kms:Decrypt",
           "kms:GenerateDataKey"
@@ -28,6 +33,11 @@ Lets assume we have to create a policy document like this
         actions = ["sts:AssumeRole"]
         
         principals {
+          type        = "Service"
+          identifiers = ["firehose.amazonaws.com"]
+        }  
+
+         principals {
           type        = "Service"
           identifiers = ["firehose.amazonaws.com"]
         }  
@@ -92,5 +102,26 @@ Variables definitions are followes
             values   = list(string)
           }))         
         })    
+    }
+    
+In the main.tf how this would be called ? like following
+
+    module "s3-data-bucket" {
+      source = "./modules/dataBucket"
+     
+      policy = {
+         actions = [ "s3:*"]
+          principals = [
+              {
+                identifiers = [ "arn:aws:iam::${local.corp_cd_account_id}:user/jenkins", "arn:aws:iam::${local.corp_cd_account_id}:root", "arn:aws:iam::${local.corp_cd_prod_account_id}:role/dp-jenkins-eks-worker-role"]
+                type = "AWS"
+              },
+              {
+                identifiers = [ "cloudfront.amazonaws.com" ]
+                type = "Service"
+              }         
+            ]
+          condition = []
+        }  
     }
 
