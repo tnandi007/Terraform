@@ -22,3 +22,32 @@ Lets assume we have to create a policy document like this
         }
       }
     }
+This can be implemented using Dynamic like this
+
+        data "aws_iam_policy_document" "this" {
+        statement {
+              dynamic "principals" {
+                for_each = var.policy.principals
+                content {
+                  type= principals.value["type"]
+                  identifiers = principals.value["identifiers"]
+                }
+              }
+
+              actions = var.policy.actions
+        
+              resources=[
+                 "arn:aws:s3:::${local.bucket_name}/*", 
+                 "arn:aws:s3:::${local.bucket_name}",
+              ]
+              dynamic "condition" {
+                for_each = var.policy.condition
+                content {        
+                  test     = condition.value["test"]
+                  variable = condition.value["variable"]
+                  values   = condition.value["values"]
+                }
+              }
+            }
+    
+          }
