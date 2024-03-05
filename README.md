@@ -20,6 +20,19 @@ Lets assume we have to create a policy document like this
           type        = "Federated"
           identifiers = ["arn:aws:iam::${var.account_id}:saml-provider/${var.provider_name}", "cognito-identity.amazonaws.com"]
         }
+
+        actions = [
+          "kms:Decrypt",
+          "kms:GenerateDataKey"
+            ]
+    
+        resources = ["*"]
+    
+        condition {
+          test     = "ForAnyValue:StringEquals"
+          variable = "kms:EncryptionContext:service"
+          values   = ["pi"]
+        }
       }
     }
 This can be implemented using Dynamic like this
