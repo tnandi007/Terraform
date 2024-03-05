@@ -9,17 +9,28 @@ Lets assume we have to create a policy document like this
         principals {
           type        = "Service"
           identifiers = ["firehose.amazonaws.com"]
-        }
+        }  
+
+        actions = [
+          "kms:Decrypt",
+          "kms:GenerateDataKey"
+            ]
     
-        principals {
-          type        = "AWS"
-          identifiers = [var.trusted_role_arn]
-        }
+        resources = ["*"]
     
-        principals {
-          type        = "Federated"
-          identifiers = ["arn:aws:iam::${var.account_id}:saml-provider/${var.provider_name}", "cognito-identity.amazonaws.com"]
+        condition {
+          test     = "ForAnyValue:StringEquals"
+          variable = "kms:EncryptionContext:service"
+          values   = ["pi"]
         }
+      }
+      statement {
+        actions = ["sts:AssumeRole"]
+        
+        principals {
+          type        = "Service"
+          identifiers = ["firehose.amazonaws.com"]
+        }  
 
         actions = [
           "kms:Decrypt",
@@ -64,3 +75,22 @@ This can be implemented using Dynamic like this
             }
     
           }
+
+Variables definitions are followes 
+
+    variable "policy"{
+      type =object({ 
+          actions = list (string)
+          #resorces = list (string) 
+          principals = list (object({
+            type= string
+            identifiers = list(string)
+          }))
+          condition = list (object({
+            test     = string
+            variable = string
+            values   = list(string)
+          }))         
+        })    
+    }
+
