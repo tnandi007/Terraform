@@ -86,7 +86,7 @@ This can be implemented using Dynamic like this
     
           }
 
-Variables definitions are followes 
+The variabke "Policy" has beed defined like following 
 
     variable "policy"{
       type =object({ 
@@ -104,7 +104,7 @@ Variables definitions are followes
         })    
     }
     
-In the main.tf how this would be called ? like following
+In the main.tf how this moduled would be called ? like following
 
     module "s3-data-bucket" {
       source = "./modules/dataBucket"
